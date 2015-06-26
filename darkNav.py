@@ -10,6 +10,7 @@ class Navigator(object):
 		self.alive = True
 		self.name = name
 		self.history = []
+		self.history.append(self.coords)
 
 
 	def move(self, direction, distance):
