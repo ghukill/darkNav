@@ -1,12 +1,15 @@
 import numpy
-import requests
+import random
+import matplotlib.pyplot as plt
 
 
 class Navigator(object):
 
-	def __init__(self):		
+	def __init__(self, name='ofNoName'):		
 		self.coords = (0,0)
 		self.alive = True
+		self.name = name
+		self.history = []
 
 
 	def move(self, direction, distance):
@@ -43,15 +46,59 @@ class Navigator(object):
 
 		# create tuple
 		movement_tuple = tuple(numpy.multiply(dir_trans[direction],distance))
-		print "movement_tuple",movement_tuple
+		# print "movement_tuple",movement_tuple
 
 		# update navigator location
 		self.coords = tuple(numpy.add(self.coords, movement_tuple))
-		print "New location:",self.coords
+
+		# update history
+		self.history.append(self.coords)
+
+	# random move
+	def randomMove(self,max_distance):
+
+		# random direction
+		dir_dict = {
+			1:'n',
+			2:'e',
+			3:'s',
+			4:'w'
+		}
+		direction = dir_dict[int(random.random() * 4) + 1]
+
+		# random distance
+		flip = {
+			False:-1,
+			True:1
+		}
+		distance = (flip[bool(random.getrandbits(1))]) * (int(random.random() * max_distance) + 1)
+
+		# debug
+		self.move(direction,distance)
 
 
 class Arena(object):
 
 	def __init__(self):
-		pass
 		
+		self.height = 10
+		self.width = 10
+
+
+
+
+if __name__ == "__main__":
+	print "-----Entering darkNav-----"
+
+	nav1 = Navigator('girgio')
+
+	# random movements
+	for _ in range(10000):
+		nav1.randomMove(10)
+
+	# prep to scatter
+	from math import log
+	plt.scatter(*zip(*nav1.history))
+	plt.show()
+
+
